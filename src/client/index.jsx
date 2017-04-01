@@ -1,6 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+import 'scss/base.scss'
+import 'scss/print.scss'
+
 // AppContainer is a necessary wrapper component for HMR
 import { AppContainer } from 'react-hot-loader';
 

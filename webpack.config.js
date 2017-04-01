@@ -1,8 +1,18 @@
-const webpack = require('webpack')
+const {
+    HotModuleReplacementPlugin,
+    NamedModulesPlugin,
+    optimize
+} = require('webpack')
 const { resolve } = require('path')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const HtmlPlugin = require('html-webpack-plugin')
+const ResourceHintsPlugin = require('resource-hints-webpack-plugin')
+const FaviconsPlugin = require('favicons-webpack-plugin')
+const CopyPlugin = require('copy-webpack-plugin')
 
+/************************************************************
+    ENTRY CONFIG
+************************************************************/
 const entry = (env) => {
     let entryConfig = [
         'react-hot-loader/patch',
@@ -19,33 +29,52 @@ const entry = (env) => {
     return entryConfig
 }
 
+/*************************************************************
+    PLUGINS CONFIG
+*************************************************************/
 const plugins = (env) => {
     let pluginsConfig = [
-        new ExtractTextPlugin('style.css'),
+        new ExtractTextPlugin(
+            (env === 'prod')
+            ? 'style.[chunkhash].css'
+            : 'style.css'
+        ),
         new HtmlPlugin({
             template: 'src/client/index.html'
         }),
-        new webpack.optimize.CommonsChunkPlugin({
+        new ResourceHintsPlugin(),
+        new optimize.CommonsChunkPlugin({
             name: 'vendor',
             minChunks: function (module) {
                return module.context && module.context.indexOf('node_modules') !== -1;
             }
         }),
-        new webpack.optimize.CommonsChunkPlugin({
+        new optimize.CommonsChunkPlugin({
             name: 'manifest'
-        })
+        }),
+        new FaviconsPlugin(resolve(__dirname, 'assets', 'b-icon.png')),
+        new CopyPlugin([
+            {from: resolve(__dirname, 'src', 'client', '.htaccess')},
+            {from: resolve(__dirname, 'src', 'client', '404.html')},
+            {from: resolve(__dirname, 'src', 'client', 'crossdomain.xml')},
+            {from: resolve(__dirname, 'src', 'client', 'humans.txt')},
+            {from: resolve(__dirname, 'src', 'client', 'robots.txt')}
+        ])
     ]
 
     if(env === 'dev') {
         pluginsConfig.push(
-            new webpack.HotModuleReplacementPlugin(),
-            new webpack.NamedModulesPlugin()
+            new HotModuleReplacementPlugin(),
+            new NamedModulesPlugin()
         )
     }
 
     return pluginsConfig
 }
 
+/************************************************************
+    MAIN CONFIG
+************************************************************/
 const config = function(env) {
     return {
         entry: entry(env),

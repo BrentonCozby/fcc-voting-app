@@ -2,7 +2,7 @@ const express = require('express')
 const { resolve, join } = require('path')
 const webpackDevMiddleware = require('webpack-dev-middleware')
 const webpack = require('webpack')
-const webpackConfig = require('../../webpack.config.babel.js')
+const webpackConfig = require('../../webpack.config.js')
 
 const app = express();
 
@@ -16,8 +16,12 @@ if(process.env.NODE_ENV === 'development') {
     }));
 }
 
-app.get('*', (req, res) => {
+app.get('/', (req, res) => {
     res.sendFile(resolve(__dirname, '../../dist', 'client', 'index.html'))
+})
+
+app.get('*', (req, res) => {
+    res.sendFile(resolve(__dirname, '../../dist', 'client', '404.html'))
 })
 
 app.listen(3000, function() {

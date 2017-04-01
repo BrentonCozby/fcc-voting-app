@@ -1,11 +1,11 @@
 import React from 'react'
-import './App.scss'
+import '../scss/components/App.scss'
 
 const lastName = 'Cozby'
 
 const App = () => (
     <div className={'App'}>
-        <h2>Hello, {'Brent ' + lastName}</h2>
+        <h2>Hello, {'Brenton ' + lastName}</h2>
     </div>
 )
 
