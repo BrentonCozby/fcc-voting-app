@@ -1,13 +1,33 @@
 {
-  "extends": "airbnb",
+  "extends": [
+    "airbnb",
+    "plugin:flowtype/recommended",
+    "plugin:react/recommended"
+  ],
   "plugins": [
-    "compat"
+    "compat",
+    "flowtype",
+    "react"
   ],
   "rules": {
-      "compat/compat": 2,
-      "semi": [2, "never"],
-      "no-unexpected-multiline": 2,
-      "indent": 0,
-      "comma-dangle": 0
+    "compat/compat": 2,
+    "semi": [2, "never"],
+    "no-unexpected-multiline": 2,
+    "indent": 0,
+    "comma-dangle": 0,
+    "react/jsx-indent": 0,
+    "import/first": 0,
+    "import/extensions": 0,
+    "react/jsx-space-before-closing": 0
+  },
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "env": {
+    "browser": true,
+    "node": true,
+    "jest": true
   }
 }

@@ -1,3 +1,5 @@
+// @flow
+
 const express = require('express')
 const { resolve } = require('path')
 const webpackDevMiddleware = require('webpack-dev-middleware')

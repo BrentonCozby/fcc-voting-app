@@ -43,8 +43,7 @@ const plugins = (env) => {
             : 'style.css'
         ),
         new HtmlPlugin({
-            template: 'src/client/index.html',
-            inject: 'body'
+            template: 'src/client/index.html'
         }),
         new ResourceHintsPlugin(),
         new optimize.CommonsChunkPlugin({
