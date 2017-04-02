@@ -1,5 +1,4 @@
 import React from 'react'
-import '../scss/components/App.scss'
 
 const lastName = 'Cozby'
 

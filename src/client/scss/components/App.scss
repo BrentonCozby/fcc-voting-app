@@ -1,7 +1,13 @@
 .App {
-    text-size-adjust: none;
-    font-family: helvetica, arial, sans-serif;
-    line-height: 200%;
-    padding: 6px 20px 30px;
-    color: lightblue;
+    padding-top: 100px;
+    color: #444;
+
+    h2 {
+        font-family: $alfa-slab-one;
+        font-weight: 400;
+        font-size: 5rem;
+        letter-spacing: 2px;
+        text-align: center;
+        color: lightgreen;
+    }
 }

@@ -1,14 +1,17 @@
-const {
+import {
     HotModuleReplacementPlugin,
+    HashedModuleIdsPlugin,
     NamedModulesPlugin,
     optimize
-} = require('webpack')
-const { resolve } = require('path')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
-const HtmlPlugin = require('html-webpack-plugin')
-const ResourceHintsPlugin = require('resource-hints-webpack-plugin')
-const FaviconsPlugin = require('favicons-webpack-plugin')
-const CopyPlugin = require('copy-webpack-plugin')
+} from 'webpack'
+import { resolve } from 'path'
+import ExtractTextPlugin from 'extract-text-webpack-plugin'
+import ChunkManifestPlugin from "chunk-manifest-webpack-plugin"
+import WebpackChunkHash from "webpack-chunk-hash"
+import HtmlPlugin from 'html-webpack-plugin'
+import ResourceHintsPlugin from 'resource-hints-webpack-plugin'
+import FaviconsPlugin from 'favicons-webpack-plugin'
+import CopyPlugin from 'copy-webpack-plugin'
 
 /************************************************************
     ENTRY CONFIG
@@ -40,7 +43,8 @@ const plugins = (env) => {
             : 'style.css'
         ),
         new HtmlPlugin({
-            template: 'src/client/index.html'
+            template: 'src/client/index.html',
+            inject: 'body'
         }),
         new ResourceHintsPlugin(),
         new optimize.CommonsChunkPlugin({
@@ -51,6 +55,12 @@ const plugins = (env) => {
         }),
         new optimize.CommonsChunkPlugin({
             name: 'manifest'
+        }),
+        new HashedModuleIdsPlugin(),
+        new WebpackChunkHash(),
+        new ChunkManifestPlugin({
+            filename: "chunk-manifest.json",
+            manifestVariable: "webpackManifest"
         }),
         new FaviconsPlugin(resolve(__dirname, 'assets', 'b-icon.png')),
         new CopyPlugin([
@@ -82,6 +92,7 @@ const config = function(env) {
             filename: (env === 'prod')
                 ? '[name].[chunkhash].js'
                 : '[name].js',
+            chunkFilename: '[name].[chunkhash].js',
             path: resolve(__dirname, 'dist', 'client'),
             publicPath: '/'
         },
@@ -103,14 +114,17 @@ const config = function(env) {
                     }
                 }]},
                 {test: /\.scss$/,
-                use: ExtractTextPlugin.extract({
-                    use: [
-                        'css-loader',
-                        {loader: 'postcss-loader',
-                        options: {plugins: () => [require('autoprefixer')]}},
-                        'sass-loader'
-                    ]
-                })},
+                use: (env === 'prod')
+                    ? ExtractTextPlugin.extract({
+                        use: [
+                            'css-loader',
+                            {loader: 'postcss-loader',
+                            options: {plugins: () => [require('autoprefixer')]}},
+                            'sass-loader'
+                        ]
+                    })
+                    : ['style-loader', 'css-loader', 'sass-loader']
+                },
                 {test: /\.(jpe?g|png|gif|svg|ico)$/,
                 use: [
                     {loader: 'url-loader',
